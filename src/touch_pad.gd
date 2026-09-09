@@ -23,12 +23,12 @@ func _input(event: InputEvent) -> void:
 		if event.index == finger and (not event.pressed or event.canceled):
 			_release()
 		elif event.pressed and not event.canceled and finger == -1:
-			var local := get_global_transform_with_canvas().affine_inverse() * event.position
+			var local: Vector2 = get_global_transform_with_canvas().affine_inverse() * event.position
 			if local.distance_to(size * 0.5) <= size.x * 0.5:
 				finger = event.index
 				_update_direction(local)
 	elif event is InputEventScreenDrag and event.index == finger:
-		var local := get_global_transform_with_canvas().affine_inverse() * event.position
+		var local: Vector2 = get_global_transform_with_canvas().affine_inverse() * event.position
 		_update_direction(local)
 
 
