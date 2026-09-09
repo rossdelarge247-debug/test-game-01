@@ -46,9 +46,11 @@ def main():
     malformed = False
     for name in ("VERCEL_TOKEN", "VERCEL_ORG_ID", "VERCEL_PROJECT_ID"):
         raw_value = os.environ.get(name, "")
-        value = raw_value.strip()
+        # Vercel identifiers cannot contain whitespace anywhere. Copy/paste
+        # can insert a line break inside them; validate the result via the API.
+        value = raw_value.strip() if name == "VERCEL_TOKEN" else re.sub(r"\s+", "", raw_value)
         if raw_value != value:
-            report("NORMALIZED: Removed surrounding whitespace from " + name + ".")
+            report("NORMALIZED: Removed copy/paste whitespace from " + name + ".")
         values[name] = value
         if not value:
             report("FAIL: " + name + " is missing.")
