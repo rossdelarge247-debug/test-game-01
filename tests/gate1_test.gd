@@ -109,7 +109,7 @@ func _run() -> void:
 	var drag := InputEventScreenDrag.new()
 	drag.index = 3
 	drag.position = touch_center + Vector2(120, -120)
-	Input.parse_input_event(drag)
+	pad.call("_input", drag)
 	await _frames(3)
 	_check(player.velocity.length() <= 160.1, "touch diagonal speed remains bounded")
 	_touch(touch_center + Vector2(200, -200), 3, false)
@@ -165,7 +165,9 @@ func _touch(at: Vector2, index: int, pressed: bool, canceled: bool = false) -> v
 	event.index = index
 	event.pressed = pressed
 	event.canceled = canceled
-	Input.parse_input_event(event)
+	# Feed viewport-space touch events to the controller. Browser tests
+	# separately exercise the real OS/browser event delivery and scaling.
+	current_scene.get_node("HUD/Layout/TouchPad").call("_input", event)
 
 
 func _frames(count: int) -> void:
