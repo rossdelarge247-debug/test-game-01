@@ -6,13 +6,25 @@ command -v godot >/dev/null 2>&1 || {
 	exit 1
 }
 
-echo "Importing resources and checking the project in headless editor mode…"
-godot --headless --path . --editor --quit
+mkdir -p build/validation
 
-echo "Starting the smoke-test scene for three frames…"
-smoke_output="$(godot --headless --path . --quit-after 3 2>&1)"
-printf '%s\n' "${smoke_output}"
-grep -q "SMOKE_TEST_READY" <<<"${smoke_output}"
+# Godot may report a script error but still exit zero. Check both status and log.
+run_checked() {
+	local name="$1"
+	shift
+	"$@" 2>&1 | tee "build/validation/${name}.log"
+	if grep -Eq '(^|[[:space:]])(SCRIPT ERROR|ERROR):' "build/validation/${name}.log"; then
+		echo "Godot reported errors during ${name}." >&2
+		exit 1
+	fi
+}
+
+run_checked import godot --headless --path . --editor --quit
+run_checked smoke godot --headless --path . res://scenes/smoke_test.tscn --quit-after 3
+grep -q 'SMOKE_TEST_READY' build/validation/smoke.log
+run_checked gate1 godot --headless --path . --quit-after 3
+grep -q 'GATE1_READY' build/validation/gate1.log
+run_checked movement timeout 90s godot --headless --path . --fixed-fps 60 --script tests/gate1_test.gd
+grep -q 'GATE1_TESTS_PASSED' build/validation/movement.log
 
 echo "Project validation passed."
-

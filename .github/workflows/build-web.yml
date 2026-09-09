@@ -38,11 +38,42 @@ jobs:
       - name: Add Godot to PATH
         run: echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
-      - name: Validate project and smoke test
+      - name: Validate project, smoke scene and Gate 1 movement
         run: bash scripts/validate.sh
 
       - name: Export web build
         run: bash scripts/export-web.sh
+
+      - name: Set up Node for browser validation
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install browser test tools
+        run: |
+          npm install --no-save --package-lock=false playwright@1.58.0
+          npx playwright install --with-deps chromium
+
+      - name: Check exported game in Chromium
+        shell: bash
+        run: |
+          python3 -m http.server 8000 --bind 127.0.0.1 --directory build/web > build/validation/server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          for attempt in {1..30}; do
+            if curl --silent --fail http://127.0.0.1:8000/ > /dev/null; then break; fi
+            sleep 1
+          done
+          node tests/web_smoke.mjs
+
+      - name: Upload validation logs and browser screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gate1-validation-${{ github.sha }}
+          path: build/validation/
+          if-no-files-found: warn
+          retention-days: 14
 
       - name: Upload downloadable web build
         uses: actions/upload-artifact@v4
@@ -51,4 +82,3 @@ jobs:
           path: build/web/
           if-no-files-found: error
           retention-days: 14
-

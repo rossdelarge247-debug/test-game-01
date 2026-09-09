@@ -1,6 +1,6 @@
-# Godot cloud game scaffold
+# Acaciana Fub — Prototype 0
 
-A deliberately minimal Godot project for validating cloud development, CI, web export, and Vercel deployment before gameplay work begins.
+An original top-down action-adventure prototype, developed through the handoff’s Gauntlet gates. Gate 1 adds a playable movement greybox to the existing cloud build pipeline.
 
 ## Locked foundation
 
@@ -8,9 +8,12 @@ A deliberately minimal Godot project for validating cloud development, CI, web e
 - GDScript
 - Compatibility renderer (`gl_compatibility`)
 - Single-threaded Web export for broad hosting/browser compatibility
-- No gameplay, input model, networking, persistence, or multiplayer architecture yet
+- Gate 1 only: movement, facing, walls, camera and restart
+- Gameplay reference: *A Link to the Past*; Gauntlet describes the build process
 
-The only scene is `scenes/smoke_test.tscn`. It displays the runtime version and prints `SMOKE_TEST_READY` so CI can prove that the project imports and starts.
+The default scene is `scenes/gate1.tscn`. Move with **WASD or arrow keys**; restart with **R or the on-screen button**. Follow the line through the passage and walk back. The gold marker is Acaciana’s temporary placeholder.
+
+The original `scenes/smoke_test.tscn` remains as a separate pipeline check. See [the corrected brief](docs/prototype-0.md) and [Gate 1 checks and playback guide](docs/gate-1.md).
 
 ## Cloud development
 
@@ -26,7 +29,9 @@ bash scripts/export-web.sh
 python3 -m http.server 8000 --directory build/web
 ```
 
-Open port 8000 to verify the exported smoke-test scene in a browser.
+Open port 8000 and click the game once if it needs keyboard focus. Downloaded web builds must be served over HTTP; opening `index.html` directly from disk does not work.
+
+To run in the matching Godot editor, open `project.godot` and press **F6** on `scenes/gate1.tscn`, or **F5** to run the project. Command line: `godot --path .`.
 
 ## GitHub Actions web build
 
@@ -34,15 +39,16 @@ Open port 8000 to verify the exported smoke-test scene in a browser.
 
 1. Downloads the pinned Linux Godot editor and matching official export templates.
 2. Opens/imports the project headlessly.
-3. Runs the smoke-test scene and checks for its ready signal.
+3. Runs the smoke scene and exercises Gate 1 movement, collisions, the complete route, camera bounds, focus loss and restart.
 4. Exports the `Web` preset to `build/web/index.html`.
-5. Uploads the complete web build as a 14-day GitHub Actions artifact.
+5. Opens the export in Chromium and checks rendering, keyboard input and restart.
+6. Uploads the complete web build plus validation logs and screenshots as 14-day GitHub Actions artifacts.
 
 To download a build, open **Actions → Validate and build web → a successful run → Artifacts**.
 
 ## Vercel setup
 
-Deployment is intentionally manual until the external account is connected and the smoke build is accepted.
+Deployment remains manual. In Vercel use **Framework Preset: Other** and the repository root (`./`). The supported workflow uploads a prebuilt static bundle, so Vercel does not need a Godot build command or an install command. GitHub Actions creates the web output; no credentials belong in the game or project files.
 
 ### One-time Vercel account/project setup
 
@@ -67,5 +73,5 @@ If you also enable Vercel's GitHub integration, disable its automatic source bui
 
 ## Scope boundary
 
-The eventual direction is Gauntlet-style, but this scaffold makes no gameplay or multiplayer architecture choices. Those decisions start only after the game brief is supplied.
+Ross confirmed that Gauntlet is the gated development method and *A Link to the Past* supplies the top-down gameplay reference, superseding the v0.1 handoff’s side-view/jump recommendation. Gate 1 is a disposable movement course; combat, story scenes, interactions and multiplayer are outside this change. Unknown lore stays marked in the corrected brief.
 
