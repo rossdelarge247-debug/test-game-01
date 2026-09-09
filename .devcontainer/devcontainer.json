@@ -1,0 +1,19 @@
+{
+  "name": "Godot 4.7.2 GDScript",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+  "onCreateCommand": "bash scripts/install-godot.sh",
+  "postCreateCommand": "export PATH=\"$HOME/.local/bin:$PATH\" && godot --version",
+  "remoteEnv": {
+    "GODOT_VERSION": "4.7.2",
+    "GODOT_RELEASE": "stable",
+    "PATH": "${containerEnv:PATH}:${containerEnv:HOME}/.local/bin"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "geequlim.godot-tools"
+      ]
+    }
+  }
+}
+

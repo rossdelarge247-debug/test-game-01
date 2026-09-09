@@ -1,0 +1,14 @@
+# Godot-generated files
+.godot/
+
+# Build output
+build/
+
+# Local tooling and deployment state
+.cache/
+.vercel/
+
+# OS/editor files
+.DS_Store
+*.swp
+

@@ -1,0 +1,76 @@
+name: Deploy web to Vercel
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Vercel deployment target
+        required: true
+        default: production
+        type: choice
+        options:
+          - production
+          - preview
+
+permissions:
+  contents: read
+
+env:
+  GODOT_VERSION: 4.7.2
+  GODOT_RELEASE: stable
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Require Vercel configuration
+        shell: bash
+        run: |
+          for secret_name in VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID; do
+            if [[ -z "${!secret_name:-}" ]]; then
+              echo "Missing required GitHub Actions secret: ${secret_name}" >&2
+              exit 1
+            fi
+          done
+
+      - name: Cache Godot downloads
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/godot
+          key: godot-${{ runner.os }}-${{ runner.arch }}-${{ env.GODOT_VERSION }}-${{ env.GODOT_RELEASE }}
+
+      - name: Install Godot and export templates
+        run: bash scripts/install-godot.sh
+
+      - name: Add Godot to PATH
+        run: echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Validate and export
+        run: |
+          bash scripts/validate.sh
+          bash scripts/export-web.sh
+          bash scripts/prepare-vercel.sh
+
+      - name: Link Vercel project without committing credentials
+        shell: bash
+        run: |
+          mkdir -p .vercel
+          printf '{"orgId":"%s","projectId":"%s"}\n' "$VERCEL_ORG_ID" "$VERCEL_PROJECT_ID" > .vercel/project.json
+
+      - name: Deploy
+        shell: bash
+        run: |
+          deploy_flags=(--prebuilt --yes --token "$VERCEL_TOKEN")
+          if [[ "${{ inputs.environment }}" == "production" ]]; then
+            deploy_flags+=(--prod)
+          fi
+          npx --yes vercel@latest deploy "${deploy_flags[@]}"
+
