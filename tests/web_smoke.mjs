@@ -84,7 +84,10 @@ async function checkTouch(viewport, orientation) {
       x: box.x + (box.width - 640 * scale) / 2 + x * scale,
       y: box.y + (box.height - 360 * scale) / 2 + y * scale,
     });
-    const initial = await canvas.screenshot({ path: `build/validation/touch-${orientation}-start.png` });
+    await canvas.screenshot({ path: `build/validation/touch-${orientation}-start.png` });
+    // Compare the game area, excluding the Restart button's post-tap hover state.
+    const worldClip = { ...point(184, 60), width: 440 * scale, height: 160 * scale };
+    const initialWorld = await mobile.screenshot({ clip: worldClip });
     const cdp = await context.newCDPSession(mobile);
     await cdp.send('Input.dispatchTouchEvent', {
       type: 'touchStart', touchPoints: [{ ...point(96, 236), id: 1 }],
@@ -95,8 +98,8 @@ async function checkTouch(viewport, orientation) {
     await mobile.waitForTimeout(600);
     await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
     await mobile.waitForTimeout(1000);
-    const moved = await canvas.screenshot({ path: `build/validation/touch-${orientation}-moved.png` });
-    assert.ok(!initial.equals(moved), 'Dragging the pad must move the rendered player');
+    await canvas.screenshot({ path: `build/validation/touch-${orientation}-moved.png` });
+    assert.ok(!initialWorld.equals(await mobile.screenshot({ clip: worldClip })), 'Dragging the pad must move the rendered player');
     const nextReady = sceneReady + 1;
     const restart = point(552, 276);
     await mobile.touchscreen.tap(restart.x, restart.y);
@@ -104,7 +107,7 @@ async function checkTouch(viewport, orientation) {
     while (sceneReady < nextReady && Date.now() < restartDeadline) await mobile.waitForTimeout(100);
     assert.equal(sceneReady, nextReady, 'Touch restart must reload the scene');
     await mobile.waitForTimeout(700);
-    assert.ok(initial.equals(await canvas.screenshot()), 'Touch restart restores the initial rendered scene');
+    assert.ok(initialWorld.equals(await mobile.screenshot({ clip: worldClip })), 'Touch restart restores the initial rendered scene');
     assert.deepEqual(mobileErrors, [], 'Mobile browser must have no runtime errors');
     console.log(`TOUCH_WEB_PASSED: ${orientation} movement and restart without a keyboard`);
   } finally {
