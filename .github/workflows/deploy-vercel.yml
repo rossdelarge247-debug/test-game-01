@@ -31,15 +31,8 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Require Vercel configuration
-        shell: bash
-        run: |
-          for secret_name in VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID; do
-            if [[ -z "${!secret_name:-}" ]]; then
-              echo "Missing required GitHub Actions secret: ${secret_name}" >&2
-              exit 1
-            fi
-          done
+      - name: Normalize and verify Vercel connection
+        run: python3 scripts/check-vercel.py --export-env
 
       - name: Cache Godot downloads
         uses: actions/cache@v4
@@ -73,4 +66,3 @@ jobs:
             deploy_flags+=(--prod)
           fi
           npx --yes vercel@latest deploy "${deploy_flags[@]}"
-

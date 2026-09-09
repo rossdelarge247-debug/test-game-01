@@ -45,7 +45,10 @@ def main():
     values = {}
     malformed = False
     for name in ("VERCEL_TOKEN", "VERCEL_ORG_ID", "VERCEL_PROJECT_ID"):
-        value = os.environ.get(name, "")
+        raw_value = os.environ.get(name, "")
+        value = raw_value.strip()
+        if raw_value != value:
+            report("NORMALIZED: Removed surrounding whitespace from " + name + ".")
         values[name] = value
         if not value:
             report("FAIL: " + name + " is missing.")
@@ -74,6 +77,17 @@ def main():
             report("FAIL: IDs resolve to a different project, not test-game-01.")
             return 1
         report("PASS: Token can read test-game-01 using the configured project and team IDs. Investigate CLI deployment separately if it still fails.")
+        if "--export-env" in sys.argv:
+            # Mask normalized values before later steps can display env headers.
+            # GitHub consumes add-mask commands and hides their payloads.
+            env_file = os.environ.get("GITHUB_ENV")
+            if not env_file:
+                report("FAIL: --export-env requires a GitHub Actions environment file.")
+                return 1
+            with open(env_file, "a", encoding="utf-8") as output:
+                for name, value in values.items():
+                    print("::add-mask::" + value, flush=True)
+                    output.write(name + "=" + value + "\n")
         return 0
     if status == 401:
         report("FAIL: Vercel rejected authentication. Replace VERCEL_TOKEN with a valid, unexpired token.")
