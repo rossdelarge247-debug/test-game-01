@@ -1,13 +1,13 @@
-# Gate 2 combat test
+# Gate 3 interaction test
 
-Gate 1 movement and mobile controls were tested and accepted by Ross on 10 September 2026. The default scene now proposes Gate 2 for review.
+Collect the sword, defeat the enemy, then approach and recover the green memory fragment. The memory popup pauses the action; Continue returns control. Story text remains explicitly unconfirmed.
 
-- **Move:** WASD / arrows, or the touch thumbpad.
-- **Attack:** J / Space, or hold the on-screen ATTACK button. Move and attack together on touch devices.
-- **Restart:** R or Restart. Landscape is recommended on phones.
-- Approach the red diamond, face it and swing. Three hits defeat it; contact costs one of five health points. Restart after winning or losing.
+- **Move:** WASD / arrows or the touch thumbpad.
+- **Use / collect:** E or the on-screen USE button. A prompt appears within reach.
+- **Attack after collecting the sword:** J / Space or ATTACK.
+- **Close memory:** E / Escape or Continue. **Restart:** R or Restart.
 
-This is an abstract combat arena with provisional shapes and tuning. It does not establish sword/enemy identity or progress into Gate 3. See [Gate 2](docs/gate-2.md) for acceptance checks and limits.
+The default scene is `scenes/gate3.tscn`. This is an abstract interaction test, not the later Virginiana slice. See [Gate 3](docs/gate-3.md) for scope and acceptance checks. Gate 2 and Test history were tested by Ross before progressing.
 
 ## Play earlier gates
 
@@ -19,7 +19,7 @@ The root URL opens the latest test with navigation. Its exported game lives at `
 
 Godot `4.7.2-stable`, GDScript, Compatibility renderer (`gl_compatibility`) and single-threaded Web export. *A Link to the Past* is the top-down reference; Gauntlet is the gated build process.
 
-The default scene is `scenes/gate2.tscn`. The original movement course and pipeline smoke scene remain available independently. See [the corrected brief](docs/prototype-0.md) and [Gate 1 checks](docs/gate-1.md).
+The default scene is `scenes/gate3.tscn`. The original movement course and pipeline smoke scene remain available independently. See [the corrected brief](docs/prototype-0.md) and [Gate 1 checks](docs/gate-1.md).
 
 ## Cloud development
 
@@ -37,7 +37,7 @@ python3 -m http.server 8000 --directory build/web
 
 Open port 8000 and click the game once if it needs keyboard focus. Downloaded web builds must be served over HTTP; opening `index.html` directly from disk does not work.
 
-To run in the matching Godot editor, open `project.godot` and press **F6** on `scenes/gate2.tscn`, or **F5** to run the project. Command line: `godot --path .`.
+To run in the matching Godot editor, open `project.godot` and press **F6** on `scenes/gate3.tscn`, or **F5** to run the project. Command line: `godot --path .`.
 
 ## GitHub Actions web build
 
@@ -79,4 +79,4 @@ If you also enable Vercel's GitHub integration, disable its automatic source bui
 
 ## Scope boundary
 
-Ross confirmed that Gauntlet is the gated development method and *A Link to the Past* supplies the top-down gameplay reference, superseding the v0.1 handoff’s side-view/jump recommendation. Gate 2 adds combat to a disposable test arena. Story scenes, interactions and multiplayer are outside this change. Unknown lore stays marked in the corrected brief.
+Ross confirmed that Gauntlet is the gated development method and *A Link to the Past* supplies the top-down gameplay reference, superseding the v0.1 handoff’s side-view/jump recommendation. Gate 3 adds interaction and collection to a disposable test arena. The coherent Virginiana level, final memory text and multiplayer are outside this change. Unknown lore stays marked in the corrected brief.

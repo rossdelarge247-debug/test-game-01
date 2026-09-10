@@ -28,7 +28,7 @@ async function checkGame(viewport, name, touch) {
     assert.ok(condition(), `${name}: ${label}\n${errors.join('\n')}`);
   };
   try {
-    await page.goto('http://127.0.0.1:8000', {waitUntil:'load'});
+    await page.goto('http://127.0.0.1:8000/history/gate-2/', {waitUntil:'load'});
     await until(()=>ready===1, 'game ready', 60000);
     await page.waitForTimeout(300);
     const canvas = page.frameLocator('iframe').locator('#canvas');

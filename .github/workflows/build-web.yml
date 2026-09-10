@@ -67,6 +67,7 @@ jobs:
             sleep 1
           done
           node tests/web_smoke.mjs
+          node tests/interaction_web.mjs
           node tests/history_web.mjs
 
       - name: Upload validation logs and browser screenshots

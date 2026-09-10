@@ -18,6 +18,7 @@ var hit_targets: Array[int] = []
 var knockback := Vector2.ZERO
 var combat_enabled := true
 @onready var sword: CollisionShape2D = $Sword/Shape
+@export var sword_equipped := true
 
 
 func _ready() -> void:
@@ -42,7 +43,7 @@ func _physics_process(delta: float) -> void:
 
 
 func request_attack() -> bool:
-	if cooldown_left > 0 or health <= 0 or not has_focus or not combat_enabled:
+	if not sword_equipped or cooldown_left > 0 or health <= 0 or not has_focus or not combat_enabled:
 		return false
 	attack_facing = facing
 	$Sword.rotation = attack_facing.angle()

@@ -1,9 +1,9 @@
 {
-  "current_title": "Gate 2 · Combat",
+  "current_title": "Gate 3 \u00b7 Interaction",
   "gates": [
     {
       "id": "gate-1",
-      "title": "Gate 1 · Movement",
+      "title": "Gate 1 \u00b7 Movement",
       "description": "Movement, walls, camera and the first mobile thumbpad.",
       "date": "2026-09-10",
       "commit": "0d568997eb5a30df6c42fffb20d57c7bc848f766",
@@ -13,7 +13,7 @@
     },
     {
       "id": "gate-2",
-      "title": "Gate 2 · Combat",
+      "title": "Gate 2 \u00b7 Combat",
       "description": "Sword attacks, one enemy, health, damage and defeat. Keyboard and touch controls.",
       "date": "2026-09-10",
       "commit": "ef33839fe07f8bb681e5134e23c2d72a6dbe41cb",
