@@ -1,21 +1,19 @@
-# Acaciana Fub — Prototype 0
+# Gate 2 combat test
 
-An original top-down action-adventure prototype, developed through the handoff’s Gauntlet gates. Gate 1 adds a playable movement greybox to the existing cloud build pipeline.
+Gate 1 movement and mobile controls were tested and accepted by Ross on 10 September 2026. The default scene now proposes Gate 2 for review.
+
+- **Move:** WASD / arrows, or the touch thumbpad.
+- **Attack:** J / Space, or hold the on-screen ATTACK button. Move and attack together on touch devices.
+- **Restart:** R or Restart. Landscape is recommended on phones.
+- Approach the red diamond, face it and swing. Three hits defeat it; contact costs one of five health points. Restart after winning or losing.
+
+This is an abstract combat arena with provisional shapes and tuning. It does not establish sword/enemy identity or progress into Gate 3. See [Gate 2](docs/gate-2.md) for acceptance checks and limits.
 
 ## Locked foundation
 
-- Godot `4.7.2-stable`
-- GDScript
-- Compatibility renderer (`gl_compatibility`)
-- Single-threaded Web export for broad hosting/browser compatibility
-- Gate 1 only: movement, facing, walls, camera and restart
-- Gameplay reference: *A Link to the Past*; Gauntlet describes the build process
+Godot `4.7.2-stable`, GDScript, Compatibility renderer (`gl_compatibility`) and single-threaded Web export. *A Link to the Past* is the top-down reference; Gauntlet is the gated build process.
 
-The default scene is `scenes/gate1.tscn`. Move with **WASD or arrow keys**; restart with **R or the on-screen button**. Follow the line through the passage and walk back. The gold marker is Acaciana’s temporary placeholder.
-
-On a phone or tablet, drag the on-screen thumb pad to move and lift to stop. Tap **Restart** to reset. No software keyboard is needed; landscape gives you a larger view.
-
-The original `scenes/smoke_test.tscn` remains as a separate pipeline check. See [the corrected brief](docs/prototype-0.md) and [Gate 1 checks and playback guide](docs/gate-1.md).
+The default scene is `scenes/gate2.tscn`. The original movement course and pipeline smoke scene remain available independently. See [the corrected brief](docs/prototype-0.md) and [Gate 1 checks](docs/gate-1.md).
 
 ## Cloud development
 
@@ -33,7 +31,7 @@ python3 -m http.server 8000 --directory build/web
 
 Open port 8000 and click the game once if it needs keyboard focus. Downloaded web builds must be served over HTTP; opening `index.html` directly from disk does not work.
 
-To run in the matching Godot editor, open `project.godot` and press **F6** on `scenes/gate1.tscn`, or **F5** to run the project. Command line: `godot --path .`.
+To run in the matching Godot editor, open `project.godot` and press **F6** on `scenes/gate2.tscn`, or **F5** to run the project. Command line: `godot --path .`.
 
 ## GitHub Actions web build
 
@@ -41,9 +39,9 @@ To run in the matching Godot editor, open `project.godot` and press **F6** on `s
 
 1. Downloads the pinned Linux Godot editor and matching official export templates.
 2. Opens/imports the project headlessly.
-3. Runs the smoke scene and exercises Gate 1 movement, collisions, the complete route, camera bounds, focus loss and restart.
+3. Runs the smoke scene and exercises Gate 1 movement, collisions, the complete route, camera bounds, focus loss and restart; then tests combat hit areas, damage, protection, defeat and reset.
 4. Exports the `Web` preset to `build/web/index.html`.
-5. Opens the export in Chromium and checks rendering, keyboard input and restart.
+5. Opens the export in Chromium and checks rendering, keyboard and multitouch movement/attacks, enemy defeat and restart in desktop, portrait and landscape.
 6. Uploads the complete web build plus validation logs and screenshots as 14-day GitHub Actions artifacts.
 
 To download a build, open **Actions → Validate and build web → a successful run → Artifacts**.
@@ -75,4 +73,4 @@ If you also enable Vercel's GitHub integration, disable its automatic source bui
 
 ## Scope boundary
 
-Ross confirmed that Gauntlet is the gated development method and *A Link to the Past* supplies the top-down gameplay reference, superseding the v0.1 handoff’s side-view/jump recommendation. Gate 1 is a disposable movement course; combat, story scenes, interactions and multiplayer are outside this change. Unknown lore stays marked in the corrected brief.
+Ross confirmed that Gauntlet is the gated development method and *A Link to the Past* supplies the top-down gameplay reference, superseding the v0.1 handoff’s side-view/jump recommendation. Gate 2 adds combat to a disposable test arena. Story scenes, interactions and multiplayer are outside this change. Unknown lore stays marked in the corrected brief.

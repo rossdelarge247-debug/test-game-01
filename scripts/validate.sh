@@ -22,9 +22,14 @@ run_checked() {
 run_checked import godot --headless --path . --editor --quit
 run_checked smoke godot --headless --path . res://scenes/smoke_test.tscn --quit-after 3
 grep -q 'SMOKE_TEST_READY' build/validation/smoke.log
-run_checked gate1 godot --headless --path . --quit-after 3
+run_checked gate1 godot --headless --path . res://scenes/gate1.tscn --quit-after 3
 grep -q 'GATE1_READY' build/validation/gate1.log
 run_checked movement timeout 90s godot --headless --path . --fixed-fps 60 --script tests/gate1_test.gd
 grep -q 'GATE1_TESTS_PASSED' build/validation/movement.log
+
+run_checked gate2 godot --headless --path . --quit-after 3
+grep -q 'GATE2_READY' build/validation/gate2.log
+run_checked combat timeout 90s godot --headless --path . --fixed-fps 60 --script tests/combat_test.gd
+grep -q 'COMBAT_TESTS_PASSED' build/validation/combat.log
 
 echo "Project validation passed."
