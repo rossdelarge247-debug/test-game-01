@@ -96,6 +96,40 @@ func _run() -> void:
 	player = current_scene.get_node("Acaciana")
 	_check(player.position.is_equal_approx(Vector2(192, 448)), "button reloads spawn")
 
+	var pad: Control = current_scene.get_node("HUD/Layout/TouchPad")
+	pad.show() # Simulate a touchscreen in the headless integration runner.
+	var touch_center: Vector2 = pad.get_global_transform_with_canvas() * (pad.size * 0.5)
+	_touch(touch_center + Vector2(62, 0), 3, true)
+	await _frames(20)
+	_check(player.position.x > 235, "touch pad moves the player")
+	_touch(touch_center, 4, true)
+	_touch(touch_center, 4, false)
+	await _frames(1)
+	_check(player.get("touch_direction").x > 0.9, "second finger cannot release active pad")
+	var drag := InputEventScreenDrag.new()
+	drag.index = 3
+	drag.position = touch_center + Vector2(120, -120)
+	pad.call("_input", drag)
+	await _frames(3)
+	_check(player.velocity.length() <= 160.1, "touch diagonal speed remains bounded")
+	_touch(touch_center + Vector2(200, -200), 3, false)
+	await _frames(2)
+	_check(player.velocity.is_zero_approx(), "lifting outside the pad stops movement")
+	_touch(touch_center + Vector2(62, 0), 5, true)
+	await _frames(2)
+	_touch(touch_center, 5, false, true)
+	await _frames(2)
+	_check(player.velocity.is_zero_approx(), "canceled touch stops movement")
+	_touch(touch_center + Vector2(62, 0), 6, true)
+	await _frames(2)
+	pad.notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
+	await _frames(2)
+	_check(player.velocity.is_zero_approx() and pad.get("finger") == -1, "focus loss releases touch capture")
+	current_scene.get_node("HUD/Layout/RestartTouch").emit_signal("pressed")
+	await _frames(5)
+	player = current_scene.get_node("Acaciana")
+	_check(player.position.is_equal_approx(Vector2(192, 448)), "mobile restart resets spawn")
+
 	if failures == 0:
 		print("GATE1_TESTS_PASSED")
 	else:
@@ -123,6 +157,17 @@ func _key(code: int, pressed: bool) -> void:
 	event.physical_keycode = code
 	event.pressed = pressed
 	Input.parse_input_event(event)
+
+
+func _touch(at: Vector2, index: int, pressed: bool, canceled: bool = false) -> void:
+	var event := InputEventScreenTouch.new()
+	event.position = at
+	event.index = index
+	event.pressed = pressed
+	event.canceled = canceled
+	# Feed viewport-space touch events to the controller. Browser tests
+	# separately exercise the real OS/browser event delivery and scaling.
+	current_scene.get_node("HUD/Layout/TouchPad").call("_input", event)
 
 
 func _frames(count: int) -> void:

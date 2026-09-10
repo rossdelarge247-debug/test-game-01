@@ -5,12 +5,14 @@ extends CharacterBody2D
 
 var facing := Vector2.DOWN
 var has_focus := true
+var touch_direction := Vector2.ZERO
 
 
 func _physics_process(_delta: float) -> void:
 	var direction := Vector2.ZERO
 	if has_focus:
 		direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+		direction = (direction + touch_direction).limit_length(1.0)
 	if direction != Vector2.ZERO:
 		# Diagonal motion keeps a cardinal facing; vertical wins equal-axis ties.
 		if absf(direction.x) > absf(direction.y):
@@ -25,6 +27,7 @@ func _physics_process(_delta: float) -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT:
 		has_focus = false
+		touch_direction = Vector2.ZERO
 		velocity = Vector2.ZERO
 		for action in ["move_left", "move_right", "move_up", "move_down"]:
 			Input.action_release(action)

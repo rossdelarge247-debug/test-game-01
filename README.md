@@ -13,6 +13,8 @@ An original top-down action-adventure prototype, developed through the handoff�
 
 The default scene is `scenes/gate1.tscn`. Move with **WASD or arrow keys**; restart with **R or the on-screen button**. Follow the line through the passage and walk back. The gold marker is Acaciana’s temporary placeholder.
 
+On a phone or tablet, drag the on-screen thumb pad to move and lift to stop. Tap **Restart** to reset. No software keyboard is needed; landscape gives you a larger view.
+
 The original `scenes/smoke_test.tscn` remains as a separate pipeline check. See [the corrected brief](docs/prototype-0.md) and [Gate 1 checks and playback guide](docs/gate-1.md).
 
 ## Cloud development
@@ -74,4 +76,3 @@ If you also enable Vercel's GitHub integration, disable its automatic source bui
 ## Scope boundary
 
 Ross confirmed that Gauntlet is the gated development method and *A Link to the Past* supplies the top-down gameplay reference, superseding the v0.1 handoff’s side-view/jump recommendation. Gate 1 is a disposable movement course; combat, story scenes, interactions and multiplayer are outside this change. Unknown lore stays marked in the corrected brief.
-

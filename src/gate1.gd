@@ -29,6 +29,12 @@ func _ready() -> void:
 		wall.add_child(collision)
 		$Walls.add_child(wall)
 	$HUD/Layout/Top/Restart.pressed.connect(_request_restart)
+	$HUD/Layout/RestartTouch.pressed.connect(_request_restart)
+	var touch_enabled := DisplayServer.is_touchscreen_available()
+	$HUD/Layout/RestartTouch.visible = touch_enabled
+	$HUD/Layout/Top/Restart.visible = not touch_enabled
+	if touch_enabled:
+		$HUD/Layout/Bottom/Controls.text = "Drag the pad to move · Lift to stop · Best in landscape"
 	$Acaciana/Camera2D.reset_smoothing()
 	print("GATE1_READY")
 

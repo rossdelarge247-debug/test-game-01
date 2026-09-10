@@ -9,6 +9,10 @@ Open `project.godot` in Godot 4.7.2-stable and press F5, or run `godot --path .`
 | Move in eight directions | WASD or arrow keys; combine keys for diagonals |
 | Restart course | R or Restart button |
 | Restore browser keyboard focus | Click inside the game |
+| Move on a phone/tablet | Drag the on-screen thumb pad; lift your finger to stop |
+| Restart on a phone/tablet | Tap the large Restart button |
+
+Touch controls appear automatically on touch-capable devices. A software keyboard is not needed. Portrait works; landscape gives the course and controls more room. The pad follows its first finger even outside its ring, releases on touch cancellation or focus loss, and permits another finger to use Restart.
 
 Follow the line through the central passage to the far ring, then return. The ring is a test landmark, not an interaction or quest endpoint. Walk into walls and around the rectangular blocks. Restart resets the scene, spawn, camera and facing. Focus loss clears held movement to prevent drifting when returning to the window.
 
@@ -33,7 +37,7 @@ Browser checks use keyboard events and compare the rendered course before moveme
 
 ## Limits and next gate
 
-This is a movement greybox. The visuals and course are provisional. Keyboard/browser support is the current target; touch, gamepad and Safari/Firefox/device coverage are not yet validated. Responsiveness and camera comfort still need Ross's hands-on assessment.
+This is a movement greybox. The visuals and course are provisional. Keyboard and touch movement are checked in Chromium, including emulated mobile portrait/landscape layouts. Actual phone hardware, gamepad and Safari/Firefox coverage remain unverified. Responsiveness and camera comfort still need Ross's hands-on assessment.
 
 Combat, health, enemies, interaction, memory text and the Virginiana slice belong to later gates. No multiplayer, inventory, saving or world architecture has been introduced. All remaining canon placeholders are listed in `prototype-0.md`; no new story claims appear in the course.
 
