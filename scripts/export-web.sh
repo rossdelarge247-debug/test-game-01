@@ -20,3 +20,6 @@ done
 
 echo "Web export created in build/web."
 
+
+# Include pinned earlier gates and the browser navigation shell.
+python3 scripts/build-history.py

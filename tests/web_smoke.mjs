@@ -31,7 +31,7 @@ async function checkGame(viewport, name, touch) {
     await page.goto('http://127.0.0.1:8000', {waitUntil:'load'});
     await until(()=>ready===1, 'game ready', 60000);
     await page.waitForTimeout(300);
-    const canvas = page.locator('#canvas');
+    const canvas = page.frameLocator('iframe').locator('#canvas');
     const box = await canvas.boundingBox();
     const scale = Math.min(box.width/640,box.height/360);
     const point=(x,y)=>({x:box.x+(box.width-640*scale)/2+x*scale,y:box.y+(box.height-360*scale)/2+y*scale});

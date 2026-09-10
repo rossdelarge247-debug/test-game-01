@@ -9,6 +9,12 @@ Gate 1 movement and mobile controls were tested and accepted by Ross on 10 Septe
 
 This is an abstract combat arena with provisional shapes and tuning. It does not establish sword/enemy identity or progress into Gate 3. See [Gate 2](docs/gate-2.md) for acceptance checks and limits.
 
+## Play earlier gates
+
+The game page includes **Test history**, with browser-playable Gate 1 (movement) and Gate 2 (combat). Each is rebuilt from the exact commit and Godot version recorded in `history/gates.json`; later gameplay changes do not alter that source snapshot. New gates are added to this manifest before progressing further. See [archive maintenance](docs/test-history.md).
+
+The root URL opens the latest test with navigation. Its exported game lives at `/play/`, and historical tests live under `/history/gate-N/`. These pages are part of both the downloadable build and the existing Vercel deployment. No new secrets are needed.
+
 ## Locked foundation
 
 Godot `4.7.2-stable`, GDScript, Compatibility renderer (`gl_compatibility`) and single-threaded Web export. *A Link to the Past* is the top-down reference; Gauntlet is the gated build process.
