@@ -1,0 +1,25 @@
+{
+  "current_title": "Gate 2 · Combat",
+  "gates": [
+    {
+      "id": "gate-1",
+      "title": "Gate 1 · Movement",
+      "description": "Movement, walls, camera and the first mobile thumbpad.",
+      "date": "2026-09-10",
+      "commit": "0d568997eb5a30df6c42fffb20d57c7bc848f766",
+      "godot_version": "4.7.2",
+      "godot_release": "stable",
+      "ready_marker": "GATE1_READY"
+    },
+    {
+      "id": "gate-2",
+      "title": "Gate 2 · Combat",
+      "description": "Sword attacks, one enemy, health, damage and defeat. Keyboard and touch controls.",
+      "date": "2026-09-10",
+      "commit": "ef33839fe07f8bb681e5134e23c2d72a6dbe41cb",
+      "godot_version": "4.7.2",
+      "godot_release": "stable",
+      "ready_marker": "GATE2_READY"
+    }
+  ]
+}
