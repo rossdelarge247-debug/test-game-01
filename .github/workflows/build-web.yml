@@ -38,7 +38,7 @@ jobs:
       - name: Add Godot to PATH
         run: echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
-      - name: Validate project, smoke scene and Gate 1 movement
+      - name: Validate project, movement and combat
         run: bash scripts/validate.sh
 
       - name: Export web build
@@ -70,7 +70,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: gate1-validation-${{ github.sha }}
+          name: prototype-validation-${{ github.sha }}
           path: build/validation/
           if-no-files-found: warn
           retention-days: 14
