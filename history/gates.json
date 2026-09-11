@@ -1,5 +1,5 @@
 {
-  "current_title": "Gate 6 · QA",
+  "current_title": "Gate 7 · Playback",
   "gates": [
     {
       "id": "gate-1",
@@ -47,6 +47,16 @@
       "description": "Original room colours, paths, sound cues, fades and gamepad controls.",
       "date": "2026-09-11",
       "commit": "44256d08c09aa71b9f77febcae75086d2445fa84",
+      "godot_version": "4.7.2",
+      "godot_release": "stable",
+      "ready_marker": "GATE5_READY"
+    },
+    {
+      "id": "gate-6",
+      "title": "Gate 6 · QA",
+      "description": "Accepted route with controller-slot, rotation and sound-pool fixes, checked in Chromium and Firefox.",
+      "date": "2026-09-11",
+      "commit": "c21d48217ec9954cc5c4eb3d74a1093fe4cd9051",
       "godot_version": "4.7.2",
       "godot_release": "stable",
       "ready_marker": "GATE5_READY"
