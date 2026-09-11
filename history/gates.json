@@ -1,5 +1,5 @@
 {
-  "current_title": "Gate 3 · Interaction",
+  "current_title": "Gate 4 · Virginiana",
   "gates": [
     {
       "id": "gate-1",
@@ -20,6 +20,16 @@
       "godot_version": "4.7.2",
       "godot_release": "stable",
       "ready_marker": "GATE2_READY"
+    },
+    {
+      "id": "gate-3",
+      "title": "Gate 3 · Interaction",
+      "description": "Sword pickup, combat and memory collection. Accepted by Ross on 11 September 2026.",
+      "date": "2026-09-11",
+      "commit": "84deecb1b73f7d4ab6361c47122f09297126bc77",
+      "godot_version": "4.7.2",
+      "godot_release": "stable",
+      "ready_marker": "GATE3_READY"
     }
   ]
 }

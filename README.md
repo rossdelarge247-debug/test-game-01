@@ -1,17 +1,21 @@
-# Gate 3 interaction test
+# Acaciana Fub — Gate 4 Virginiana route
 
-Collect the sword, defeat the enemy, then approach and recover the green memory fragment. The memory popup pauses the action; Continue returns control. Story text remains explicitly unconfirmed.
+A provisional three-room greybox links sword pickup, combat, a switch-operated passage, memory collection and an endpoint. Move east through the marked exits; backtrack using the west arrows. E / USE activates nearby objects. At the memory clearing, recover the fragment, close the popup and use the ring marker to finish. Restart resets the entire route.
+
+Gate 3 was accepted by Ross on 11 September 2026 and is now preserved alongside Gates 1 and 2 under **Test history**. Gate 4 awaits his playback. See [Gate 4 scope and test guide](docs/gate-4.md).
+
+## Controls
 
 - **Move:** WASD / arrows or the touch thumbpad.
 - **Use / collect:** E or the on-screen USE button. A prompt appears within reach.
 - **Attack after collecting the sword:** J / Space or ATTACK.
 - **Close memory:** E / Escape or Continue. **Restart:** R or Restart.
 
-The default scene is `scenes/gate3.tscn`. This is an abstract interaction test, not the later Virginiana slice. See [Gate 3](docs/gate-3.md) for scope and acceptance checks. Gate 2 and Test history were tested by Ross before progressing.
+The default scene is `scenes/gate4.tscn`. The prior interaction test remains available as `scenes/gate3.tscn` and in Test history.
 
 ## Play earlier gates
 
-The game page includes **Test history**, with browser-playable Gate 1 (movement) and Gate 2 (combat). Each is rebuilt from the exact commit and Godot version recorded in `history/gates.json`; later gameplay changes do not alter that source snapshot. New gates are added to this manifest before progressing further. See [archive maintenance](docs/test-history.md).
+The game page includes **Test history**, with browser-playable Gate 1 (movement), Gate 2 (combat) and Gate 3 (interaction). Each is rebuilt from the exact commit and Godot version recorded in `history/gates.json`; later gameplay changes do not alter that source snapshot. New gates are added to this manifest before progressing further. See [archive maintenance](docs/test-history.md).
 
 The root URL opens the latest test with navigation. Its exported game lives at `/play/`, and historical tests live under `/history/gate-N/`. These pages are part of both the downloadable build and the existing Vercel deployment. No new secrets are needed.
 
@@ -19,7 +23,7 @@ The root URL opens the latest test with navigation. Its exported game lives at `
 
 Godot `4.7.2-stable`, GDScript, Compatibility renderer (`gl_compatibility`) and single-threaded Web export. *A Link to the Past* is the top-down reference; Gauntlet is the gated build process.
 
-The default scene is `scenes/gate3.tscn`. The original movement course and pipeline smoke scene remain available independently. See [the corrected brief](docs/prototype-0.md) and [Gate 1 checks](docs/gate-1.md).
+The default scene is `scenes/gate4.tscn`. The original movement course and pipeline smoke scene remain available independently. See [the corrected brief](docs/prototype-0.md) and [Gate 1 checks](docs/gate-1.md).
 
 ## Cloud development
 
@@ -37,7 +41,7 @@ python3 -m http.server 8000 --directory build/web
 
 Open port 8000 and click the game once if it needs keyboard focus. Downloaded web builds must be served over HTTP; opening `index.html` directly from disk does not work.
 
-To run in the matching Godot editor, open `project.godot` and press **F6** on `scenes/gate3.tscn`, or **F5** to run the project. Command line: `godot --path .`.
+To run in the matching Godot editor, open `project.godot` and press **F6** on `scenes/gate4.tscn`, or **F5** to run the project. Command line: `godot --path .`.
 
 ## GitHub Actions web build
 
@@ -45,9 +49,9 @@ To run in the matching Godot editor, open `project.godot` and press **F6** on `s
 
 1. Downloads the pinned Linux Godot editor and matching official export templates.
 2. Opens/imports the project headlessly.
-3. Runs the smoke scene and exercises Gate 1 movement, collisions, the complete route, camera bounds, focus loss and restart; then tests combat hit areas, damage, protection, defeat and reset.
+3. Runs the smoke scene and exercises Gate 1 movement, collisions, the complete route, camera bounds, focus loss and restart; then tests combat, interaction and the connected route, including collision, backtracking, completion and reset.
 4. Exports the `Web` preset to `build/web/index.html`.
-5. Opens the export in Chromium and checks rendering, keyboard and multitouch movement/attacks, enemy defeat and restart in desktop, portrait and landscape.
+5. Opens the export in Chromium and checks rendering, keyboard and multitouch movement/attacks, combat, room traversal, switch, memory, endpoint and restart in desktop, portrait and landscape; it also checks historical gates.
 6. Uploads the complete web build plus validation logs and screenshots as 14-day GitHub Actions artifacts.
 
 To download a build, open **Actions → Validate and build web → a successful run → Artifacts**.
