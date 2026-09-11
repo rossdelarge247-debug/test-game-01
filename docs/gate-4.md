@@ -27,3 +27,7 @@ CI runs existing movement/combat/interaction tests, route checks for gated exits
 Gate 4 is not accepted until Ross plays it. Physical phone feel and Safari remain unverified. Playback questions: Is the route clear? Is the switch understandable? Does backtracking feel consistent? Does the endpoint read as a finish? Does restart reliably reset everything?
 
 Before Gate 5, record actual playback acceptance and pin the merged Gate 4 revision in history.
+
+## Acceptance recorded
+
+Ross played the deployed route and confirmed “tesed, works” on 11 September 2026. Accepted merged revision: 16e3483c4d86c071e65b062a3340d6cea2505f53; deployment run 34597710289. This build is now pinned in Test history.

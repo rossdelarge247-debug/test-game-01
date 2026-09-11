@@ -69,6 +69,8 @@ jobs:
           node tests/web_smoke.mjs
           node tests/interaction_web.mjs
           node tests/slice_web.mjs
+          node tests/presentation_web.mjs
+          node tests/gamepad_web.mjs
           node tests/history_web.mjs
 
       - name: Upload validation logs and browser screenshots

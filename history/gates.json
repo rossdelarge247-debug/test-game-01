@@ -1,5 +1,5 @@
 {
-  "current_title": "Gate 4 · Virginiana",
+  "current_title": "Gate 5 · Presentation",
   "gates": [
     {
       "id": "gate-1",
@@ -30,6 +30,16 @@
       "godot_version": "4.7.2",
       "godot_release": "stable",
       "ready_marker": "GATE3_READY"
+    },
+    {
+      "id": "gate-4",
+      "title": "Gate 4 · Virginiana route",
+      "description": "Three connected rooms, a switch-operated passage, backtracking and an endpoint.",
+      "date": "2026-09-11",
+      "commit": "16e3483c4d86c071e65b062a3340d6cea2505f53",
+      "godot_version": "4.7.2",
+      "godot_release": "stable",
+      "ready_marker": "GATE4_READY"
     }
   ]
 }

@@ -37,9 +37,14 @@ grep -q 'GATE3_READY' build/validation/gate3.log
 run_checked interaction timeout 90s godot --headless --path . --fixed-fps 60 --script tests/interaction_test.gd
 grep -q 'INTERACTION_TESTS_PASSED' build/validation/interaction.log
 
-run_checked gate4 godot --headless --path . --quit-after 3
+run_checked gate4 godot --headless --path . res://scenes/gate4.tscn --quit-after 3
 grep -q GATE4_READY build/validation/gate4.log
 run_checked slice timeout 90s godot --headless --path . --fixed-fps 60 --script tests/slice_test.gd
 grep -q SLICE_TESTS_PASSED build/validation/slice.log
+
+run_checked gate5 godot --headless --path . --quit-after 3
+grep -q GATE5_READY build/validation/gate5.log
+run_checked presentation timeout 90s godot --headless --path . --fixed-fps 60 --script tests/presentation_test.gd
+grep -q PRESENTATION_TESTS_PASSED build/validation/presentation.log
 
 echo "Project validation passed."
