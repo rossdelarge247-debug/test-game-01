@@ -3,46 +3,65 @@ import {writeFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 const browser=await chromium.launch({args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
 try {
-  await check({width:1280,height:720},'desktop',false);
-  await check({width:390,height:844},'portrait',true);
-  await check({width:844,height:390},'landscape',true);
+  await check({width:1280,height:720},'gamepad',false);
 } finally {await browser.close();}
 
 async function check(viewport,name,touch){
   const context=await browser.newContext({viewport,hasTouch:touch,isMobile:touch});
+  await context.addInitScript(() => {
+    const pad={id:'CI Standard Gamepad',index:0,mapping:'standard',connected:false,timestamp:0,
+      axes:[0,0,0,0],buttons:Array.from({length:17},()=>({pressed:false,touched:false,value:0}))};
+    window.testPad=pad;
+    Object.defineProperty(navigator,'getGamepads',{value:()=>pad.connected?[pad]:[]});
+  });
   const page=await context.newPage();
   const messages=[],errors=[];
   let ready=0;
-  page.on('console',m=>{messages.push(m.text());if(m.text().includes('GATE4_READY'))ready++;if(m.type()==='error'||/SCRIPT ERROR:|^ERROR:/.test(m.text()))errors.push(m.text());});
+  page.on('console',m=>{messages.push(m.text());if(m.text().includes('GATE5_READY'))ready++;if(m.type()==='error'||/SCRIPT ERROR:|^ERROR:/.test(m.text()))errors.push(m.text());});
   page.on('pageerror',e=>errors.push(e.message));
   page.on('response',r=>{if(r.status()>=400)errors.push(`${r.status()} ${r.url()}`);});
   const until=async(fn,label,ms=15000)=>{const deadline=Date.now()+ms;while(!fn()&&Date.now()<deadline)await page.waitForTimeout(50);assert.ok(fn(),`${name}: ${label}\n${errors.join('\n')}`);};
   const has=text=>messages.some(x=>x.includes(text));
   try {
-    await page.goto('http://127.0.0.1:8000/history/gate-4/');
-    await until(()=>ready===1,'Gate 4 ready',60000);
+    await page.goto('http://127.0.0.1:8000/');
+    await until(()=>ready===1,'Gate 5 ready',60000);
     const canvas=page.frameLocator('iframe').locator('#canvas');
+    const game=page.frames().find(f=>f.url().includes('/play/'));
+    assert.ok(game,'exported game frame exists');
+    await game.evaluate(()=>{
+      window.testPad.connected=true;
+      const event=new Event('gamepadconnected');
+      Object.defineProperty(event,'gamepad',{value:window.testPad});
+      window.dispatchEvent(event);
+    });
+    const setAxis=async(value)=>game.evaluate(v=>{window.testPad.axes[0]=v;window.testPad.timestamp=performance.now();},value);
+    const setButton=async(index,pressed)=>game.evaluate(([i,p])=>{window.testPad.buttons[i]={pressed:p,touched:p,value:p?1:0};window.testPad.timestamp=performance.now();},[index,pressed]);
+    const press=async(index)=>{await setButton(index,true);await page.waitForTimeout(100);await setButton(index,false);await page.waitForTimeout(100);};
     await page.waitForTimeout(350);
     const box=await canvas.boundingBox(),scale=Math.min(box.width/640,box.height/360);
     const point=(x,y)=>({x:box.x+(box.width-640*scale)/2+x*scale,y:box.y+(box.height-360*scale)/2+y*scale});
     const cdp=touch?await context.newCDPSession(page):null;
     const pad=(x=96)=>({...point(x,236),id:1});
     const attack=()=>({...point(552,256),id:2});
-    const use=async()=>{if(touch){const p=point(552,172);await page.touchscreen.tap(p.x,p.y);}else await page.keyboard.press('e');};
+    const use=async()=>{if(touch){const p=point(552,172);await page.touchscreen.tap(p.x,p.y);}else await press(0);};
     const walk=async(ms)=>{
       if(touch)await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[pad(158)]});
-      else await page.keyboard.down('d');
+      else await setAxis(1);
       await page.waitForTimeout(ms);
       if(touch)await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
-      else await page.keyboard.up('d');
+      else await setAxis(0);
       await page.waitForTimeout(100);
     };
     if(!touch)await canvas.click({position:{x:500,y:350}});
+    await press(3); await page.waitForTimeout(100);
+    assert.ok(has('SOUND_MUTED=true'),'keyboard mute works');
+    await press(3); await page.waitForTimeout(100);
+    assert.ok(has('SOUND_MUTED=false'),'keyboard sound restores');
     await use(); await page.waitForTimeout(100);
     assert.ok(!has('SWORD_COLLECTED'),'cannot collect from outside range');
     const initialClip={...point(184,132),width:290*scale,height:130*scale};
     const initial=await page.screenshot({clip:initialClip});
-    await canvas.screenshot({path:`build/validation/slice-${name}-start.png`});
+    await canvas.screenshot({path:`build/validation/controller-${name}-start.png`});
     await walk(120);
     await use();
     await until(()=>has('SWORD_COLLECTED'),'sword pickup');
@@ -51,55 +70,63 @@ async function check(viewport,name,touch){
     if(touch){
       await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[pad(158)]});
       await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[pad(158),attack()]});
-    }else{await page.keyboard.down('d');await page.keyboard.down('j');}
+    }else{await setAxis(1);await setButton(2,true);}
     await page.waitForTimeout(80);
     if(touch)await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[pad(),attack()]});
-    else await page.keyboard.up('d');
+    else await setAxis(0);
     await until(()=>has('ENEMY_DEFEATED'),'acquired sword defeats enemy');
     if(touch)await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
-    else await page.keyboard.up('j');
+    else await setButton(2,false);
     assert.ok(!has('PLAYER_DEFEATED'),'player survives route');
     const nextRoom=async(number)=>{
       if(touch)await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[pad(158)]});
-      else await page.keyboard.down('d');
+      else await setAxis(1);
       await until(()=>has(`ROOM_ENTERED room=${number}`),`enter room ${number}`);
       if(touch)await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
-      else await page.keyboard.up('d');
-      await page.waitForTimeout(150);
+      else await setAxis(0);
+      await page.waitForTimeout(350);
     };
     await nextRoom(1);
     await walk(600);
     await use();
     await until(()=>has('PASSAGE_OPENED'),'switch opens passage');
-    await canvas.screenshot({path:`build/validation/slice-${name}-passage.png`});
+    await canvas.screenshot({path:`build/validation/controller-${name}-passage.png`});
     await nextRoom(2);
     await walk(1100);
     await use();
     await until(()=>has('MEMORY_COLLECTED count=1'),'memory collected and popup opened');
     await page.waitForTimeout(250);
-    const popup=await canvas.screenshot({path:`build/validation/slice-${name}-memory.png`});
-    if(!touch){await page.keyboard.down('d');await page.keyboard.down('j');}
+    const popup=await canvas.screenshot({path:`build/validation/controller-${name}-memory.png`});
+    if(!touch){await setAxis(1);await setButton(2,true);}
     await page.waitForTimeout(350);
     assert.ok(popup.equals(await canvas.screenshot()),'reading popup freezes displayed action');
-    if(touch){const p=point(320,256);await page.touchscreen.tap(p.x,p.y);}else await page.keyboard.press('e');
+    if(touch){const p=point(320,256);await page.touchscreen.tap(p.x,p.y);}else await press(0);
     await until(()=>has('MEMORY_POPUP_CLOSED'),'Continue closes popup');
-    if(!touch){await page.keyboard.up('d');await page.keyboard.up('j');}
+    if(!touch){await setAxis(0);await setButton(2,false);}
     await use();await page.waitForTimeout(150);
     assert.equal(messages.filter(x=>x.includes('MEMORY_COLLECTED')).length,1,'memory is single-use');
     await walk(400);
     await use();
     await until(()=>has('SLICE_COMPLETED'),'endpoint completes route');
-    await canvas.screenshot({path:`build/validation/slice-${name}-complete.png`});
+    await canvas.screenshot({path:`build/validation/controller-${name}-complete.png`});
     const next=ready+1;
-    if(touch){const p=point(552,105);await page.touchscreen.tap(p.x,p.y);}else await page.keyboard.press('r');
+    if(touch){const p=point(552,105);await page.touchscreen.tap(p.x,p.y);}else await press(9);
     await until(()=>ready===next,'restart');
     await page.waitForTimeout(300);
     assert.ok(initial.equals(await page.screenshot({clip:initialClip})),'restart restores player, sword, enemy and hidden memory');
+    for(const cue of ['sword','defeat','passage','memory','finish','room'])assert.ok(has(`SOUND_CUE ${cue}`),`sound cue ${cue}`);
+    await setAxis(-1);await page.waitForTimeout(100);
+    await game.evaluate(()=>{const p=window.testPad;p.connected=false;const e=new Event('gamepaddisconnected');Object.defineProperty(e,'gamepad',{value:p});window.dispatchEvent(e);});
+    await until(()=>has('GAMEPAD_DISCONNECTED'),'disconnect handled');
+    await page.waitForTimeout(150);
+    const stopped=await canvas.screenshot();await page.waitForTimeout(250);
+    assert.ok(stopped.equals(await canvas.screenshot()),'unplugged controller leaves player stopped');
+    assert.ok(has('INPUT_MODE gamepad'),'real browser gamepad events selected controller prompts');
     assert.deepEqual(errors,[],'no browser errors');
-    console.log(`SLICE_WEB_PASSED: ${name} sword, combat, room transitions, switch, memory, endpoint and restart`);
+    console.log(`GAMEPAD_WEB_PASSED: ${name} sword, combat, room transitions, switch, memory, endpoint and restart`);
   }finally{
-    await writeFile(`build/validation/slice-${name}.log`,[...messages,...errors].join('\n'));
-    await page.screenshot({path:`build/validation/slice-${name}-final.png`}).catch(()=>{});
+    await writeFile(`build/validation/controller-${name}.log`,[...messages,...errors].join('\n'));
+    await page.screenshot({path:`build/validation/controller-${name}-final.png`}).catch(()=>{});
     await context.close();
   }
 }
