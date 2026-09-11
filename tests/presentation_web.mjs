@@ -1,15 +1,18 @@
-import {chromium} from 'playwright';
+import {chromium,firefox} from 'playwright';
 import {writeFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
-const browser=await chromium.launch({args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+const useFirefox=process.env.QA_BROWSER==='firefox';
+const browser=useFirefox?await firefox.launch({headless:false,firefoxUserPrefs:{'webgl.force-enabled':true}}):await chromium.launch({args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
 try {
-  await check({width:1280,height:720},'desktop',false);
-  await check({width:390,height:844},'portrait',true);
-  await check({width:844,height:390},'landscape',true);
+  await check({width:1280,height:720},useFirefox?'firefox':'desktop',false);
+  if(!useFirefox){
+    await check({width:390,height:844},'portrait',true);
+    await check({width:844,height:390},'landscape',true);
+  }
 } finally {await browser.close();}
 
 async function check(viewport,name,touch){
-  const context=await browser.newContext({viewport,hasTouch:touch,isMobile:touch});
+  const context=await browser.newContext(useFirefox?{viewport}:{viewport,hasTouch:touch,isMobile:touch});
   const page=await context.newPage();
   const messages=[],errors=[];
   let ready=0;

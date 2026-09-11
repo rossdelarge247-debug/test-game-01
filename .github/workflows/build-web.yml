@@ -20,7 +20,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
       - name: Check out repository
@@ -54,7 +54,7 @@ jobs:
       - name: Install browser test tools
         run: |
           npm install --no-save --package-lock=false playwright@1.58.0
-          npx playwright install --with-deps chromium
+          npx playwright install --with-deps chromium firefox
 
       - name: Check exported game in Chromium
         shell: bash
@@ -71,7 +71,9 @@ jobs:
           node tests/slice_web.mjs
           node tests/presentation_web.mjs
           node tests/gamepad_web.mjs
+          node tests/qa_web.mjs
           node tests/history_web.mjs
+          xvfb-run -a env QA_BROWSER=firefox LIBGL_ALWAYS_SOFTWARE=1 node tests/presentation_web.mjs
 
       - name: Upload validation logs and browser screenshots
         if: always()
