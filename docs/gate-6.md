@@ -35,3 +35,7 @@ Logs and screenshots are Actions artifacts retained for 14 days. Each historical
 Run the familiar route once. On mobile, rotate during movement, release and try moving again. Let the enemy defeat you and restart. Test the Sound button. If available, reconnect a controller and try its movement/use actions. Confirm Test history lists Gates 1–5 and opens Gate 5. Report device/browser and any failure point.
 
 After Ross accepts Gate 6, Gate 7 prepares the playback handoff and observation capture before planning expansion.
+
+## Acceptance recorded
+
+Ross tested deployment 34638253829 and confirmed “tested, works” on 11 September 2026. Accepted merged revision: c21d48217ec9954cc5c4eb3d74a1093fe4cd9051. This build is pinned in Test history. Browser/device and physical controller coverage were not specified.
