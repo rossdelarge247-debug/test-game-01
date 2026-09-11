@@ -1,6 +1,6 @@
 # Gate 3 — interaction and collection
 
-Ross reported Gate 2 working, then tested and confirmed the playable Test history. Gates 1 and 2 remain pinned in `history/gates.json`. Gate 3 is proposed for playback; it is not accepted until Ross tests it.
+Ross reported Gate 2 working, then tested and confirmed the playable Test history. Gates 1 and 2 remain pinned in `history/gates.json`. Ross tested the deployed Gate 3 sequence and confirmed it works on 11 September 2026. Accepted revision: 84deecb1b73f7d4ab6361c47122f09297126bc77; deployment run 34505958250. This revision is now pinned in playable history.
 
 ## Play the test
 

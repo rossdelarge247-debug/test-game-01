@@ -1,0 +1,224 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://src/gate4.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/combat_player.tscn" id="2"]
+[ext_resource type="Script" path="res://src/touch_pad.gd" id="3"]
+
+[ext_resource type="PackedScene" path="res://scenes/enemy.tscn" id="4"]
+[ext_resource type="Script" path="res://src/attack_button.gd" id="5"]
+[ext_resource type="Script" path="res://src/pickup.gd" id="6"]
+[ext_resource type="Script" path="res://src/interact_button.gd" id="7"]
+[sub_resource type="CircleShape2D" id="AttackShape"]
+radius = 44.0
+
+[sub_resource type="CircleShape2D" id="UseShape"]
+radius = 34.0
+[sub_resource type="CircleShape2D" id="PickupReach"]
+radius = 36.0
+
+[node name="Gate4" type="Node2D"]
+script = ExtResource("1")
+[node name="Walls" type="Node2D" parent="."]
+[node name="Acaciana" parent="." instance=ExtResource("2")]
+position = Vector2(300, 180)
+sword_equipped = false
+[node name="Enemy" parent="." instance=ExtResource("4")]
+position = Vector2(418, 180)
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="Layout" type="Control" parent="HUD"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Top" type="ColorRect" parent="HUD/Layout"]
+layout_mode = 0
+anchor_right = 1.0
+offset_bottom = 58.0
+color = Color(0.06, 0.10, 0.12, 0.94)
+mouse_filter = 2
+
+[node name="Title" type="Label" parent="HUD/Layout/Top"]
+offset_left = 16.0
+offset_top = 8.0
+offset_right = 460.0
+offset_bottom = 29.0
+theme_override_font_sizes/font_size = 17
+text = "ACACIANA FUB"
+
+[node name="Subtitle" type="Label" parent="HUD/Layout/Top"]
+offset_left = 16.0
+offset_top = 32.0
+offset_right = 480.0
+offset_bottom = 50.0
+theme_override_colors/font_color = Color(0.62, 0.73, 0.74, 1)
+theme_override_font_sizes/font_size = 12
+text = "Virginiana · Gate 4"
+
+[node name="Restart" type="Button" parent="HUD/Layout/Top"]
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -114.0
+offset_top = 13.0
+offset_right = -16.0
+offset_bottom = 45.0
+focus_mode = 0
+theme_override_font_sizes/font_size = 13
+text = "Restart [R]"
+
+[node name="Bottom" type="ColorRect" parent="HUD/Layout"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+grow_vertical = 0
+color = Color(0.06, 0.10, 0.12, 0.94)
+mouse_filter = 2
+
+[node name="Controls" type="Label" parent="HUD/Layout/Bottom"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_font_sizes/font_size = 13
+text = "WASD / Arrows · Move     J / Space · Attack     R · Restart"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TouchPad" type="Control" parent="HUD/Layout"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -204.0
+offset_right = 176.0
+offset_bottom = -44.0
+mouse_filter = 2
+script = ExtResource("3")
+
+[node name="RestartTouch" type="Button" parent="HUD/Layout"]
+visible = false
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -160.0
+offset_top = -282.0
+offset_right = -16.0
+offset_bottom = -228.0
+focus_mode = 0
+theme_override_font_sizes/font_size = 18
+text = "Restart"
+
+[node name="Health" type="Label" parent="HUD/Layout/Top"]
+offset_left = 320.0
+offset_top = 8.0
+offset_right = 495.0
+offset_bottom = 28.0
+theme_override_font_sizes/font_size = 15
+text = "HEALTH  5 / 5"
+
+[node name="Message" type="Label" parent="HUD/Layout"]
+offset_left = 184.0
+offset_top = 282.0
+offset_right = 476.0
+offset_bottom = 308.0
+theme_override_font_sizes/font_size = 12
+text = "Approach the red enemy. Face it and swing."
+horizontal_alignment = 1
+mouse_filter = 2
+
+[node name="AttackAnchor" type="Control" parent="HUD/Layout"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -88.0
+offset_right = -88.0
+offset_top = -104.0
+offset_bottom = -104.0
+mouse_filter = 2
+
+[node name="Attack" type="TouchScreenButton" parent="HUD/Layout/AttackAnchor"]
+shape = SubResource("AttackShape")
+action = "attack"
+script = ExtResource("5")
+
+[node name="Pickups" type="Node2D" parent="."]
+[node name="SwordPickup" type="Area2D" parent="Pickups"]
+position = Vector2(340, 180)
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = ExtResource("6")
+[node name="Shape" type="CollisionShape2D" parent="Pickups/SwordPickup"]
+shape = SubResource("PickupReach")
+[node name="Memory" type="Area2D" parent="Pickups"]
+position = Vector2(420, 180)
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = ExtResource("6")
+kind = "memory"
+available = false
+[node name="Shape" type="CollisionShape2D" parent="Pickups/Memory"]
+shape = SubResource("PickupReach")
+
+[node name="Inventory" type="Label" parent="HUD/Layout/Top"]
+offset_left = 320.0
+offset_top = 32.0
+offset_right = 620.0
+offset_bottom = 52.0
+theme_override_font_sizes/font_size = 12
+text = "SWORD 0 / 1   MEMORY 0 / 1"
+
+[node name="InteractAnchor" type="Control" parent="HUD/Layout"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -88.0
+offset_right = -88.0
+offset_top = -188.0
+offset_bottom = -188.0
+mouse_filter = 2
+[node name="Use" type="TouchScreenButton" parent="HUD/Layout/InteractAnchor"]
+shape = SubResource("UseShape")
+action = "interact"
+script = ExtResource("7")
+
+[node name="Popup" type="ColorRect" parent="HUD/Layout"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.025, 0.06, 0.08, 0.97)
+mouse_filter = 0
+[node name="Heading" type="Label" parent="HUD/Layout/Popup"]
+offset_left = 48.0
+offset_top = 60.0
+offset_right = 592.0
+offset_bottom = 98.0
+theme_override_font_sizes/font_size = 24
+text = "MEMORY RECOVERED"
+horizontal_alignment = 1
+[node name="Body" type="Label" parent="HUD/Layout/Popup"]
+offset_left = 64.0
+offset_top = 110.0
+offset_right = 576.0
+offset_bottom = 204.0
+theme_override_font_sizes/font_size = 17
+text = "Memory fragments: 1 / 1
+
+[CANON_TBD: memory text and connection to Fred]"
+autowrap_mode = 2
+horizontal_alignment = 1
+[node name="Close" type="Button" parent="HUD/Layout/Popup"]
+offset_left = 240.0
+offset_top = 226.0
+offset_right = 400.0
+offset_bottom = 286.0
+focus_mode = 0
+theme_override_font_sizes/font_size = 20
+text = "Continue"

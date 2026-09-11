@@ -1,3 +1,9 @@
+## Latest: Gate 4 — Virginiana route
+
+A provisional three-room greybox links sword pickup, combat, a switch-operated passage, memory collection and an endpoint. Move east through the marked exits; backtrack using the west arrows. E / USE activates nearby objects. At the memory clearing, recover the fragment, close the popup and use the ring marker to finish. Restart resets the entire route.
+
+Gate 3 was accepted by Ross on 11 September 2026 and is now preserved alongside Gates 1 and 2 under **Test history**. Gate 4 awaits his playback. See [Gate 4 scope and test guide](docs/gate-4.md).
+
 # Gate 3 interaction test
 
 Collect the sword, defeat the enemy, then approach and recover the green memory fragment. The memory popup pauses the action; Continue returns control. Story text remains explicitly unconfirmed.
