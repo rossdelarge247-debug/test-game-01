@@ -6,10 +6,12 @@ Ross accepted Gate 5 after testing deployment 34606357469: “tested, it works�
 
 This gate keeps the accepted Gate 5 route and presentation. The latest scene is still scenes/gate5.tscn; the site labels the current build Gate 6 · QA. There is no additional gameplay, story or art work.
 
-Two control risks found during review receive targeted fixes:
+Review and the first browser run identified these issues:
 
 - Gamepad actions now match any device slot instead of slot zero only, so a controller assigned another slot can operate the game. Tests use slot 2 for actual button and axis input, including a complete browser gamepad route.
 - Viewport size changes release held gameplay actions and captured touch input. This covers browser resizing/rotation even when the thumbpad's logical dimensions do not change. A browser test rotates while holding movement and checks that a fresh touch works afterward.
+
+- Firefox completed the route but its sound players remained busy and later cues were dropped. The sound pool now expires stale cues using elapsed real time and replaces the oldest busy voice when saturated. A deterministic native test fills the pool; the Firefox route continues to require all cue markers. Browser audio permission and actual output remain separate playback checks.
 
 ## Validation plan and evidence
 

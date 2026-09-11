@@ -9,6 +9,25 @@ func _initialize() -> void:
 
 func _run() -> void:
 	await _fresh()
+	# Exercise a saturated pool deterministically, independently of an audio device.
+	var sounds = world.sounds
+	var loop = sounds._tone(220.0, 0.2)
+	loop.loop_mode = AudioStreamWAV.LOOP_FORWARD
+	loop.loop_end = loop.data.size() / 2
+	for i in range(4):
+		sounds.voices[i].stream = loop
+		sounds.voices[i].play()
+		sounds.deadlines[i] = Time.get_ticks_msec() + 10000 + i
+	await _frames(3)
+	sounds.cue("memory")
+	_check(sounds.voices[0].stream == sounds.clips["memory"], "saturated sound pool plays newest cue")
+	for i in range(4):
+		sounds.deadlines[i] = Time.get_ticks_msec() - 1
+	sounds._process(0.0)
+	var stopped := true
+	for voice in sounds.voices:
+		stopped = stopped and not voice.playing
+	_check(stopped, "expired cues stop even if audio clock stalls")
 	# A controller may reconnect in a slot other than zero.
 	var axis := InputEventJoypadMotion.new()
 	axis.device = 2
