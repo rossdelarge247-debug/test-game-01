@@ -5,6 +5,7 @@ var voices: Array[AudioStreamPlayer] = []
 var clips := {}
 var last_cue := ""
 var cue_count := 0
+var deadlines: Array[int] = [0, 0, 0, 0]
 
 func _ready() -> void:
 	for i in range(4):
@@ -30,17 +31,33 @@ func _tone(frequency: float, duration: float) -> AudioStreamWAV:
 	stream.data = data
 	return stream
 
+func _process(_delta: float) -> void:
+	# A suspended browser audio clock must not retain old gameplay cues.
+	var now := Time.get_ticks_msec()
+	for i in range(voices.size()):
+		if deadlines[i] > 0 and now >= deadlines[i]:
+			voices[i].stop()
+			deadlines[i] = 0
+
 func cue(kind: String) -> void:
 	if muted or not clips.has(kind):
 		return
+	var chosen := 0
+	for i in range(voices.size()):
+		if not voices[i].playing:
+			chosen = i
+			break
+		if deadlines[i] < deadlines[chosen]:
+			chosen = i
+	var voice := voices[chosen]
+	voice.stop()
+	voice.stream = clips[kind]
+	voice.play()
+	# Keep a small tail for the engine's audio buffer, but never an unbounded queue.
+	deadlines[chosen] = Time.get_ticks_msec() + int(voice.stream.get_length() * 1000) + 80
 	last_cue = kind
 	cue_count += 1
-	for voice in voices:
-		if not voice.playing:
-			voice.stream = clips[kind]
-			voice.play()
-			print("SOUND_CUE " + kind)
-			return
+	print("SOUND_CUE " + kind)
 
 func toggle() -> void:
 	muted = not muted
@@ -49,5 +66,6 @@ func toggle() -> void:
 	print("SOUND_MUTED=%s" % muted)
 
 func stop_all() -> void:
-	for voice in voices:
-		voice.stop()
+	for i in range(voices.size()):
+		voices[i].stop()
+		deadlines[i] = 0

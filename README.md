@@ -1,8 +1,6 @@
-# Acaciana Fub — Gate 5 presentation
+# Acaciana Fub — Gate 6 QA
 
-The accepted three-room route now has original coloured ground and path details, object labels, short room fades, synthesised event sounds and standard gamepad controls. Abstract character markers and unconfirmed memory text remain placeholders.
-
-Gate 4 is preserved in **Test history** alongside Gates 1–3. Gate 5 awaits Ross’s playtest. See [Gate 5 scope and checks](docs/gate-5.md).
+The accepted Gate 5 route is undergoing regression and browser QA. Controller mappings now accept any device slot, and browser resizing releases held controls. Gate 5 is preserved in **Test history** alongside Gates 1–4. See [Gate 6 scope, checks and known limits](docs/gate-6.md).
 
 ## Controls
 
@@ -17,7 +15,7 @@ The default scene is `scenes/gate5.tscn`. The prior interaction test remains ava
 
 ## Play earlier gates
 
-The game page includes **Test history**, with browser-playable Gate 1 (movement), Gate 2 (combat) Gate 3 (interaction) and Gate 4 (connected route). Each is rebuilt from the exact commit and Godot version recorded in `history/gates.json`; later gameplay changes do not alter that source snapshot. New gates are added to this manifest before progressing further. See [archive maintenance](docs/test-history.md).
+The game page includes **Test history**, with browser-playable Gate 1 (movement), Gate 2 (combat) Gate 3 (interaction), Gate 4 (connected route) and Gate 5 (presentation). Each is rebuilt from the exact commit and Godot version recorded in `history/gates.json`; later gameplay changes do not alter that source snapshot. New gates are added to this manifest before progressing further. See [archive maintenance](docs/test-history.md).
 
 The root URL opens the latest test with navigation. Its exported game lives at `/play/`, and historical tests live under `/history/gate-N/`. These pages are part of both the downloadable build and the existing Vercel deployment. No new secrets are needed.
 

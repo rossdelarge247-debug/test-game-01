@@ -50,6 +50,7 @@ func _ready() -> void:
 	$HUD/Layout.add_child(plate)
 	$HUD/Layout.move_child(plate, $HUD/Layout/Message.get_index())
 	Input.joy_connection_changed.connect(_pad_connection)
+	get_viewport().size_changed.connect(_release_controls)
 	if touch_enabled:
 		input_mode = "touch"
 	_refresh_ui()

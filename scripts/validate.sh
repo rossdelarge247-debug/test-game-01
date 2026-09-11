@@ -47,4 +47,7 @@ grep -q GATE5_READY build/validation/gate5.log
 run_checked presentation timeout 90s godot --headless --path . --fixed-fps 60 --script tests/presentation_test.gd
 grep -q PRESENTATION_TESTS_PASSED build/validation/presentation.log
 
+run_checked qa timeout 90s godot --headless --path . --fixed-fps 60 --script tests/qa_test.gd
+grep -q QA_TESTS_PASSED build/validation/qa.log
+
 echo "Project validation passed."

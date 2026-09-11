@@ -1,5 +1,5 @@
 {
-  "current_title": "Gate 5 · Presentation",
+  "current_title": "Gate 6 · QA",
   "gates": [
     {
       "id": "gate-1",
@@ -40,6 +40,16 @@
       "godot_version": "4.7.2",
       "godot_release": "stable",
       "ready_marker": "GATE4_READY"
+    },
+    {
+      "id": "gate-5",
+      "title": "Gate 5 · Presentation",
+      "description": "Original room colours, paths, sound cues, fades and gamepad controls.",
+      "date": "2026-09-11",
+      "commit": "44256d08c09aa71b9f77febcae75086d2445fa84",
+      "godot_version": "4.7.2",
+      "godot_release": "stable",
+      "ready_marker": "GATE5_READY"
     }
   ]
 }

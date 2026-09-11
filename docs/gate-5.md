@@ -27,3 +27,7 @@ CI keeps prior native and archived browser regressions, adds native checks for g
 Generated sound data and cue triggering are checked automatically. Human listening quality, physical controller models, real-phone audio and Safari still need playback. Gate 5 is not accepted until Ross tests it. Gate 6 is the broader route/browser QA pass.
 
 References used for implementation: [Godot controller input](https://docs.godotengine.org/en/stable/tutorials/inputs/controllers_gamepads_joysticks.html) and [AudioStreamWAV](https://docs.godotengine.org/en/stable/classes/class_audiostreamwav.html). Drawings and tones are implemented directly in GDScript and carry no external asset licence requirement.
+
+## Acceptance recorded
+
+Ross tested deployment 34606357469 and confirmed “tested, it works” on 11 September 2026. Accepted revision: 44256d08c09aa71b9f77febcae75086d2445fa84. It is now pinned in Test history. Device/browser and physical controller use were not specified.

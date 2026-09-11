@@ -3,16 +3,16 @@ import {writeFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 const browser=await chromium.launch({args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
 try {
-  await check({width:1280,height:720},'gamepad',false);
+  await check({width:1280,height:720},'gamepad-slot-2',false);
 } finally {await browser.close();}
 
 async function check(viewport,name,touch){
   const context=await browser.newContext({viewport,hasTouch:touch,isMobile:touch});
   await context.addInitScript(() => {
-    const pad={id:'CI Standard Gamepad',index:0,mapping:'standard',connected:false,timestamp:0,
+    const pad={id:'CI Standard Gamepad',index:2,mapping:'standard',connected:false,timestamp:0,
       axes:[0,0,0,0],buttons:Array.from({length:17},()=>({pressed:false,touched:false,value:0}))};
     window.testPad=pad;
-    Object.defineProperty(navigator,'getGamepads',{value:()=>pad.connected?[pad]:[]});
+    Object.defineProperty(navigator,'getGamepads',{value:()=>pad.connected?[null,null,pad]:[]});
   });
   const page=await context.newPage();
   const messages=[],errors=[];

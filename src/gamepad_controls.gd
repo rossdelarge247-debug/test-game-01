@@ -12,6 +12,7 @@ static func install() -> void:
 		InputMap.action_add_event("mute", key)
 	for action in buttons:
 		var event := InputEventJoypadButton.new()
+		event.device = -1
 		event.button_index = buttons[action]
 		if not InputMap.action_has_event(action, event):
 			InputMap.action_add_event(action, event)
@@ -19,6 +20,7 @@ static func install() -> void:
 		"move_up": [JOY_AXIS_LEFT_Y, -1.0], "move_down": [JOY_AXIS_LEFT_Y, 1.0]}
 	for action in axes:
 		var event := InputEventJoypadMotion.new()
+		event.device = -1
 		event.axis = axes[action][0]
 		event.axis_value = axes[action][1]
 		if not InputMap.action_has_event(action, event):
